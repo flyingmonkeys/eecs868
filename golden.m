@@ -61,7 +61,7 @@ for k=2:N
     % Check Wolfe conditions
     fprintf('k=%2i alpha=%6.3f f(alpha)=%6.3f, d=%6.3f: ',k,alpha(k),f(x + alpha(k)*d),du);
     % Armijo condition check
-    if( f(x + alpha(k)*d) <= f(x) + c1*alpha(k)*fp(x)*d )
+    if( f(x + alpha(k)*d) <= f(x) + c1*alpha(k)*phiprime(0,d,x) )
         fprintf('(Armijo checks)');
     end
     % Curvature condition check
