@@ -3,8 +3,8 @@ close all;
 
 a_max = 10.0;
 
-c1 = 0.6;
-c2 = 0.7;
+c1 = 0.01;
+c2 = 0.10;
 x = [1 3]';
 d = [1/sqrt(2) -1/sqrt(2)]';
 a = [0:0.1:a_max];
@@ -19,9 +19,21 @@ end
 figure(1)
 plot(a,phi);
 hold on;
-plot(a,arm);
+plot(a,arm,'--');
+title('\phi vs. \alpha with superimposed Armijo constraint (c_1 = 0.01)');
+xlabel('\alpha');
+ylabel('\phi');
+grid on;
+legend({'\phi','Armijo constraint'});
+axis([0 4 -1.5 3]);
 
 figure(2)
-plot(a,c2*abs(phiprime(0,d,x))*ones(length(a)));
-hold on;
 plot(a,abs(curv));
+hold on;
+plot(a,c2*abs(phiprime(0,d,x))*ones(length(a)),'--');
+title('|\phi''| vs. \alpha with superimposed curvature constraint (c_2 = 0.10)');
+xlabel('\alpha');
+ylabel('\phi''');
+grid on;
+legend({'|\phi''|','Curv. constraint'});
+axis([0 4 0 1.2]);
