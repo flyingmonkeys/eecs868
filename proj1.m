@@ -9,7 +9,7 @@ close all;
 % Simulation parameters
 c1 = 0.01;                      % Wolfe parameter (Armijo)
 c2 = 0.10;                      % Wolfe parameter (curvature)
-a_max = 0.93;                   % maximum alpha value to search for
+a_max = 50.0;                   % maximum alpha value to search for
 d = [1/sqrt(2) -1/sqrt(2)]';    % direction vector
 x = [1 3]';                     % initial point
 

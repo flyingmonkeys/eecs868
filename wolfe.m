@@ -1,7 +1,10 @@
+% Wolfe.m
+% Plotting script to help visualize the Wolfe conditions (Armijo and curvature) vs. f
+
 clear all;
 close all;
 
-a_max = 10.0;
+a_max = 50;
 
 c1 = 0.01;
 c2 = 0.10;
@@ -33,7 +36,7 @@ hold on;
 plot(a,c2*abs(phiprime(0,d,x))*ones(length(a)),'--');
 title('|\phi''| vs. \alpha with superimposed curvature constraint (c_2 = 0.10)');
 xlabel('\alpha');
-ylabel('\phi''');
+ylabel('|\phi''|');
 grid on;
 legend({'|\phi''|','Curv. constraint'});
-axis([0 4 0 1.2]);
+axis([0 4 -1.2 1.2]);
