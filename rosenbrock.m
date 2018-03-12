@@ -3,9 +3,9 @@ hfig = figure(1);
 
 s = 0.05;
 x_min = 0;
-x_max = 4;
+x_max = 2;
 y_min = 0;
-y_max = 15;
+y_max = 2;
 X = [x_min : s : x_max+s];
 Y = [y_min : s : y_max+s];
 XC = X;

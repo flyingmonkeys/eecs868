@@ -8,6 +8,8 @@ function alpha_final = golden(x,d,c1,c2,alpha_max)
 % alpha_max = upper limit for alpha
 % Note: Requires external functions to return f(x) and phi'(x)
 
+pout = 0;
+
 % Simulation parameters
 N           = 100; % just in case... limit the max number of iterations
 alpha_min   = 0.0;        % Given in problem
@@ -33,7 +35,9 @@ y        = f(x + lowest*d); % y = phi(alpha)
 alpha(1) = c(1) + du/2;     % as defined in the project description
 phi(1)   = f(x + alpha(1)*d);
 phip(1)  = phiprime(alpha(1),d,x);
-%fprintf('k=%2i alpha=%6.3f f(alpha)=%6.3f, d=%6.3f: \n',k,alpha(k),f(x + alpha(k)*d),du);
+if( pout )
+    fprintf('k=%2i alpha=%6.3f f(alpha)=%6.3f, d=%6.3f: \n',k,alpha(k),f(x + alpha(k)*d),du);
+end
 
 % Iterate until Wolfe conditions are met (stop at N to limit iterations in
 % the event of non-convergence)
@@ -63,24 +67,34 @@ for k=2:N
     phip(k)  = phiprime(alpha(k),d,x);
 
     % Check Wolfe stopping conditions
-%    fprintf('k=%2i alpha=%6.3f f(alpha)=%6.3f, d=%6.3f: ',k,alpha(k),f(x + alpha(k)*d),du);
+    if( pout )
+        fprintf('k=%2i alpha=%6.3f f(alpha)=%6.3f, d=%6.3f: ',k,alpha(k),f(x + alpha(k)*d),du);
+    end
     checkcount = 0; % count how many constraints have been met (0, 1, or 2)
     % Armijo condition check
     if( f(x + alpha(k)*d) <= f(x) + c1*alpha(k)*phiprime(0,d,x) )
-%        fprintf('(Armijo checks)');
+        if( pout )
+            fprintf('(Armijo checks)');
+        end
         checkcount = checkcount + 1; % record that one constraint was met
     end
     % Curvature condition check (comment out either Strong Wolfe or Normal
     % Wolfe condition to switch between constraints)
     if( abs(phiprime(alpha(k),d,x)) <= c2*abs(phiprime(0,d,x)) ) % Strong Wolfe
 %    if( phiprime(alpha(k),d,x) >= c2*phiprime(0,d,x) ) % Normal Wolfe
-%        fprintf('(Curvature checks)');
+        if( pout )
+            fprintf('(Curvature checks)');
+        end
         checkcount = checkcount + 1; % record that one constraint was met
     end
-%    fprintf('\n');
+    if( pout )
+        fprintf('\n');
+    end
 
     if( checkcount == 2 )
- %       fprintf('Wolfe conditions have been met!\n');
+        if( pout )
+            fprintf('Wolfe conditions have been met!\n');
+        end
         break;
     end
 end
