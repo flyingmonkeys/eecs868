@@ -2,8 +2,14 @@ close all;
 hfig = figure(1);
 
 s = 0.05;
-X = [-2 : s : 2+s];
-Y = [-1 : s : 3+s];
+x_min = 0;
+x_max = 4;
+y_min = 0;
+y_max = 15;
+X = [x_min : s : x_max+s];
+Y = [y_min : s : y_max+s];
+XC = X;
+YC = Y;
 [X, Y] = meshgrid(X, Y);
 Z = (1-X).^2 + 100*(Y-X.^2).^2;
 
@@ -20,9 +26,11 @@ C = minZ + (maxZ-minZ).*log(1+Z-minZ)./log(1+maxZ-minZ);
 %C(index) = 1 : numel(index);
 
 surf(X, Y, Z, C, 'EdgeColor', 'none', 'LineStyle', 'none');
+%contour(X,Y,Z,40);
+grid on;
 colormap = jet;
  
-axis([-2, 2, -1, 3, 0, 2500]);
+axis([x_min, x_max, y_min, y_max, 0, maxZ]);
 xlabel('x', 'fontsize', 18);
 ylabel('y', 'fontsize', 18);
 zlabel('f', 'fontsize', 18);
@@ -33,3 +41,12 @@ print(hfig, '-dsvg', 'rosenbrock');
 % With octave 3.8.1, the pdf does not look very nice --- it is full of "scratches". 
 %print(hfig, '-depsc', 'rosenbrock');
 %system('epstopdf rosenbrock.eps');
+
+%{
+[fx,fy] = gradient(Z,0.05);
+x0 = 10;
+y0 = 0;
+t = (XC == x0) & (YC == y0);
+indt = find(t);
+f_grad = [fx(indt) fy(indt)];
+%}

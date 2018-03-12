@@ -4,13 +4,13 @@
 clear all;
 close all;
 
-a_max = 50;
+a_max = 4;
 
 c1 = 0.01;
-c2 = 0.10;
-x = [1 3]';
-d = [1/sqrt(2) -1/sqrt(2)]';
-a = [0:0.1:a_max];
+c2 = 0.55;
+x = [3.770 14.219]';
+d = [-0.934 -0.357]';
+a = [0:0.05:a_max];
 
 for k=1:length(a)
 	phi(k) = f(x + a(k)*d); 		% compute phi
@@ -28,7 +28,7 @@ xlabel('\alpha');
 ylabel('\phi');
 grid on;
 legend({'\phi','Armijo constraint'});
-axis([0 4 -1.5 3]);
+%axis([0 4 -1.5 3]);
 
 figure(2)
 plot(a,abs(curv));
@@ -39,4 +39,4 @@ xlabel('\alpha');
 ylabel('|\phi''|');
 grid on;
 legend({'|\phi''|','Curv. constraint'});
-axis([0 4 -1.2 1.2]);
+%axis([0 4 -1.2 1.2]);

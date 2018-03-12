@@ -6,7 +6,11 @@ function out = phiprime(a,d,x)
 % x = starting point vector
 % phi'(alpha) = (d2-d1)/2 * exp((x2-x1)/2)exp((d2-d1)*a/2) - (5/4)
 
-    out = ((d(2)-d(1))/2) * ( (exp( (x(2)-x(1))/2 )*exp( (d(2)-d(1))*a/2 )) - (5/4) );
-    
+%proj1    out = ((d(2)-d(1))/2) * ( (exp( (x(2)-x(1))/2 )*exp( (d(2)-d(1))*a/2 )) - (5/4) );
+	out = 100 * (x(2) + (a*d(2)) - (x(1) + a*d(1))^2);
+	out = out * (d(2) - 2*x(1)*d(1) - 2*a*(d(1)^2));
+	out = out - d(1) + d(1)*x(1) + a*(d(1)^2);
+	out = out * 2;
+
 end
 

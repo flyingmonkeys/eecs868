@@ -9,7 +9,7 @@ function alpha_final = golden(x,d,c1,c2,alpha_max)
 % Note: Requires external functions to return f(x) and phi'(x)
 
 % Simulation parameters
-N           = 20; % just in case... limit the max number of iterations
+N           = 100; % just in case... limit the max number of iterations
 alpha_min   = 0.0;        % Given in problem
 c           = zeros(2,1); % Endpoints of the Golden Section search
 e           = zeros(N,1); % Candidate points (alpha) of G.S search
@@ -21,7 +21,7 @@ phip        = zeros(N,1); % history of phi'(k) for plotting
 tau2 = 2.0/(1.0+sqrt(5.0)); % = 0.618
 c(1) = alpha_min;           % c1 < c2 always
 c(2) = alpha_max;
-fprintf('c1 = %4.2f c2 = %4.2f\n',c1,c2);   % for output analysis
+%fprintf('c1 = %4.2f c2 = %4.2f\n',c1,c2);   % for output analysis
 
 % Initialize first two points
 k        = 1;               % iteration number
@@ -33,7 +33,7 @@ y        = f(x + lowest*d); % y = phi(alpha)
 alpha(1) = c(1) + du/2;     % as defined in the project description
 phi(1)   = f(x + alpha(1)*d);
 phip(1)  = phiprime(alpha(1),d,x);
-fprintf('k=%2i alpha=%6.3f f(alpha)=%6.3f, d=%6.3f: \n',k,alpha(k),f(x + alpha(k)*d),du);
+%fprintf('k=%2i alpha=%6.3f f(alpha)=%6.3f, d=%6.3f: \n',k,alpha(k),f(x + alpha(k)*d),du);
 
 % Iterate until Wolfe conditions are met (stop at N to limit iterations in
 % the event of non-convergence)
@@ -63,36 +63,37 @@ for k=2:N
     phip(k)  = phiprime(alpha(k),d,x);
 
     % Check Wolfe stopping conditions
-    fprintf('k=%2i alpha=%6.3f f(alpha)=%6.3f, d=%6.3f: ',k,alpha(k),f(x + alpha(k)*d),du);
+%    fprintf('k=%2i alpha=%6.3f f(alpha)=%6.3f, d=%6.3f: ',k,alpha(k),f(x + alpha(k)*d),du);
     checkcount = 0; % count how many constraints have been met (0, 1, or 2)
     % Armijo condition check
     if( f(x + alpha(k)*d) <= f(x) + c1*alpha(k)*phiprime(0,d,x) )
-        fprintf('(Armijo checks)');
+%        fprintf('(Armijo checks)');
         checkcount = checkcount + 1; % record that one constraint was met
     end
     % Curvature condition check (comment out either Strong Wolfe or Normal
     % Wolfe condition to switch between constraints)
     if( abs(phiprime(alpha(k),d,x)) <= c2*abs(phiprime(0,d,x)) ) % Strong Wolfe
 %    if( phiprime(alpha(k),d,x) >= c2*phiprime(0,d,x) ) % Normal Wolfe
-        fprintf('(Curvature checks)');
+%        fprintf('(Curvature checks)');
         checkcount = checkcount + 1; % record that one constraint was met
     end
-    fprintf('\n');
+%    fprintf('\n');
 
     if( checkcount == 2 )
-        fprintf('Wolfe conditions have been met!\n');
+ %       fprintf('Wolfe conditions have been met!\n');
         break;
     end
 end
 
 if( k >= N )
-    fprintf('Wolfe conditions not satisfied!\n');
+    fprintf('Wolfe conditions not satisfied!!!!!!!!!!!!!!!!\n');
 end
 
 % Mark the final value of alpha
 alpha_final = alpha(k);
 
 %% ------------------------------Plots
+%{
 iter = (0:1:k);     % x axis label
 
 % Alpha(k) vs. k
@@ -118,6 +119,7 @@ title('\phi''_k (\alpha) vs. Iteration');
 xlabel('Iteration');
 ylabel('\phi''(\alpha)');
 grid on;
+%}
 
 end
 
