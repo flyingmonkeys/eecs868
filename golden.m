@@ -1,6 +1,7 @@
-function alpha_final = golden(x,d,c1,c2,alpha_max)
+function [alpha_final,num_iter] = golden(x,d,c1,c2,alpha_max)
 % Return the alpha that minimizes f() using the Golden Section line
 % search method and meets strong Wolfe conditions as specified by c1 and c2
+% Also returns the number of iterations used to to find the minimum
 % x         = starting point vector
 % d         = direction vector
 % c1        = Armijo parameter
@@ -11,7 +12,7 @@ function alpha_final = golden(x,d,c1,c2,alpha_max)
 pout = 0;
 
 % Simulation parameters
-N           = 100; % just in case... limit the max number of iterations
+N           = 200;        % just in case... limit the max number of iterations
 alpha_min   = 0.0;        % Given in problem
 c           = zeros(2,1); % Endpoints of the Golden Section search
 e           = zeros(N,1); % Candidate points (alpha) of G.S search
@@ -101,6 +102,9 @@ end
 
 if( k >= N )
     fprintf('Wolfe conditions not satisfied!!!!!!!!!!!!!!!!\n');
+    fprintf('x = [%8.5f %8.5f] ',x(1),x(2));
+    fprintf('d = [%6.3f %6.3f] ',d(1),d(2));
+    fprintf('a=%8.6f\n',alpha(k));
 end
 
 % Mark the final value of alpha
@@ -134,6 +138,10 @@ xlabel('Iteration');
 ylabel('\phi''(\alpha)');
 grid on;
 %}
+
+if( nargout > 1 )
+    num_iter = k;
+end
 
 end
 
