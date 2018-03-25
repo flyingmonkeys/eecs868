@@ -9,7 +9,7 @@ function [alpha_final,num_iter] = golden(x,d,c1,c2,alpha_max)
 % alpha_max = upper limit for alpha
 % Note: Requires external functions to return f(x) and phi'(x)
 
-pout = 0;
+pout = 0; % debug print output
 
 % Simulation parameters
 N           = 200;        % just in case... limit the max number of iterations
@@ -24,7 +24,6 @@ phip        = zeros(N,1); % history of phi'(k) for plotting
 tau2 = 2.0/(1.0+sqrt(5.0)); % = 0.618
 c(1) = alpha_min;           % c1 < c2 always
 c(2) = alpha_max;
-%fprintf('c1 = %4.2f c2 = %4.2f\n',c1,c2);   % for output analysis
 
 % Initialize first two points
 k        = 1;               % iteration number
@@ -139,6 +138,7 @@ ylabel('\phi''(\alpha)');
 grid on;
 %}
 
+% If we asked for the number of iterations in the function call, return it
 if( nargout > 1 )
     num_iter = k;
 end
