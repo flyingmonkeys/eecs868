@@ -1,11 +1,11 @@
-close all;
+%close all;
 hfig = figure(1);
 
 s = 0.05;
-x_min = 0;
-x_max = 2;
-y_min = 0;
-y_max = 2;
+x_min = -10;
+x_max = 10;
+y_min = -10;
+y_max = 20;
 X = [x_min : s : x_max+s];
 Y = [y_min : s : y_max+s];
 XC = X;
@@ -25,12 +25,16 @@ C = minZ + (maxZ-minZ).*log(1+Z-minZ)./log(1+maxZ-minZ);
 %[~, index] = sort(C(:));
 %C(index) = 1 : numel(index);
 
-surf(X, Y, Z, C, 'EdgeColor', 'none', 'LineStyle', 'none');
+%surf(X, Y, Z, C, 'EdgeColor', 'none', 'LineStyle', 'none');
+v = [0 0.1 0.2 0.3 0.4 0.5 1 1.001 1.002 1.01 1.02 1.03 1.1 1.5 2.0 3.0 4.0 5.0 10 20 30 40 50 100 200 500 1000 2000 5000 10000 50000 200000];
 %contour(X,Y,Z,40);
+contour(X,Y,Z,v);
+
 grid on;
+title('Rosenbrock Contour');
 colormap = jet;
  
-axis([x_min, x_max, y_min, y_max, 0, maxZ]);
+%axis([x_min, x_max, y_min, y_max, 0, maxZ]);
 xlabel('x', 'fontsize', 18);
 ylabel('y', 'fontsize', 18);
 zlabel('f', 'fontsize', 18);
@@ -49,4 +53,11 @@ y0 = 0;
 t = (XC == x0) & (YC == y0);
 indt = find(t);
 f_grad = [fx(indt) fy(indt)];
+%}
+
+%% Plots
+%
+hold on;
+plot(x_hist(1:k+1,1),x_hist(1:k+1,2),'-o','Color','r');
+grid on;
 %}

@@ -10,19 +10,19 @@ close all;
 pout = 0;
 
 % Simulation parameters
-c1    = 0.40;            % Wolfe parameter (Armijo)
-c2    = 0.70;            % Wolfe parameter (curvature)
-a_max = 100.0;            % maximum alpha value to search for
-%a_max = 1.9;            % maximum alpha value to search for
+c1    = 0.01;            % Wolfe parameter (Armijo)
+c2    = 0.99;            % Wolfe parameter (curvature)
+%a_max = 100.0;            % maximum alpha value to search for
+a_max = 1.9;            % maximum alpha value to search for
 g     = zeros(2,1);     % gradient vector
-x     = [1.2 1.2]';     % initial point 0.01,0.55,2 6 iter
+%x     = [1.2 1.2]';     % initial point 0.01,0.55,2 6 iter
 %x     = [-1.2 1.0]';    % initial point 0.01,0.55,2 11 iter (c2=0.35 144 iter)
 %x     = [10 0]';        % initial point 0.01,0.55,2 12 iter
-%x     = [1.5 15]';      % initial point 0.01,0.55,8 169 iter 0.4,0.7,2.5 12899 iter
+x     = [1.5 15]';      % initial point 0.01,0.55,8 169 iter 0.4,0.7,2.5 12899 iter
 %x     = [-5 5]';
-%x = [3.74125 14]';
 N     = 40000;          % max number of iterations (just in case)
 num_iter = 0;           % total number of low-level iterations
+n_restart = length(x);  % number of iterations needed until a restart
 
 x_hist = zeros(N,2);    % history of x per iteration
 g_hist = zeros(N,1);    % history of gradient vector length
@@ -46,13 +46,15 @@ for k=1:N
     g_hist(k) = (g'*g);
     f_hist(k) = f(x);
 
-    % Adaptive c1 (Armijo)
-    c1 = max(0.01,min(0.4,0.4*(g'*g)/0.1));
+    % Adaptively adjust c1 (Armijo constraint) based on gradient length
+ %   c1 = max(0.01,min(0.4,0.4*(g'*g)/0.1));
     
     % Golden Section search call
     a_start = a_max;
     [alpha,iters] = golden(x,d/norm(d),c1,c2,a_start);
-    %
+    
+    %{
+    % Adaptively adjust a_max if line search did not converge to a solution
     while( iters == 50 )
         num_iter = num_iter + iters;
         a_start = a_start * 0.75;
@@ -81,8 +83,12 @@ for k=1:N
     beta = (g'*g) / (g_k'*g_k);
 
     % Update direction vector
-    d = -g;             % steepest descent update
-%    d = -g + beta*d;     % Fletcher-Reeves update
+%    d = -g;             % steepest descent update
+    if( mod(k,n_restart) == 0 )
+        d = -g;             % restart direction vector
+    else
+        d = -g + beta*d;    % Fletcher-Reeves update
+    end
 
     if( pout )
         fprintf('x = [%8.5f %8.5f]\n',x(1),x(2));
@@ -104,7 +110,7 @@ plot(x_hist(1:k+1,1),x_hist(1:k+1,2),'-o');
 grid on;
 
 figure(2)
-plot(f_hist(1:k+1,1));
+plot(0:k,(f_hist(1:k+1,1)));
 grid on;
 title('Objective function vs. Iteration');
 xlabel('Iteration');
