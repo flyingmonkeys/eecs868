@@ -12,18 +12,22 @@ pout = 0;
 % Simulation parameters
 c1    = 0.40;            % Wolfe parameter (Armijo)
 c2    = 0.70;            % Wolfe parameter (curvature)
-a_max = 1.9;            % maximum alpha value to search for
+a_max = 100.0;            % maximum alpha value to search for
+%a_max = 1.9;            % maximum alpha value to search for
 g     = zeros(2,1);     % gradient vector
-%x     = [1.2 1.2]';     % initial point 0.01,0.55,2 6 iter
+x     = [1.2 1.2]';     % initial point 0.01,0.55,2 6 iter
 %x     = [-1.2 1.0]';    % initial point 0.01,0.55,2 11 iter (c2=0.35 144 iter)
 %x     = [10 0]';        % initial point 0.01,0.55,2 12 iter
 %x     = [1.5 15]';      % initial point 0.01,0.55,8 169 iter 0.4,0.7,2.5 12899 iter
-x = [3.74125 14]';
+%x     = [-5 5]';
+%x = [3.74125 14]';
 N     = 40000;          % max number of iterations (just in case)
 num_iter = 0;           % total number of low-level iterations
 
 x_hist = zeros(N,2);    % history of x per iteration
 g_hist = zeros(N,1);    % history of gradient vector length
+f_hist = zeros(N,1);    % history of objective function
+a_hist = zeros(N,1);    % history of alpha
 
 % Get initial conditions
 % Find direction vector via negative gradient
@@ -39,11 +43,26 @@ end
 for k=1:N
     % Record histories
     x_hist(k,:) = x';
-    g_hist(k,:) = (g'*g);
+    g_hist(k) = (g'*g);
+    f_hist(k) = f(x);
 
+    % Adaptive c1 (Armijo)
+    c1 = max(0.01,min(0.4,0.4*(g'*g)/0.1));
+    
     % Golden Section search call
-    [alpha,iters] = golden(x,d/norm(d),c1,c2,a_max);
+    a_start = a_max;
+    [alpha,iters] = golden(x,d/norm(d),c1,c2,a_start);
+    %
+    while( iters == 50 )
+        num_iter = num_iter + iters;
+        a_start = a_start * 0.75;
+        [alpha,iters] = golden(x,d/norm(d),c1,c2,a_start);
+        a_max = a_start;
+        fprintf('New a_max = %6.3f\n',a_start);
+    end
+    %}
     num_iter = num_iter + iters; % track number of low-level iterations
+    a_hist(k) = alpha;
 
     % Update solution
     x = x + alpha*d/norm(d);
@@ -63,7 +82,7 @@ for k=1:N
 
     % Update direction vector
     d = -g;             % steepest descent update
-%	d = -g + beta*d;     % Fletcher-Reeves update
+%    d = -g + beta*d;     % Fletcher-Reeves update
 
     if( pout )
         fprintf('x = [%8.5f %8.5f]\n',x(1),x(2));
@@ -82,6 +101,21 @@ fprintf('Number of low-level iterations  = %i\n',num_iter);
 %% Plots
 figure(1)
 plot(x_hist(1:k+1,1),x_hist(1:k+1,2),'-o');
+grid on;
+
+figure(2)
+plot(f_hist(1:k+1,1));
+grid on;
+title('Objective function vs. Iteration');
+xlabel('Iteration');
+ylabel('f(x)');
+
+figure(3)
+plot(g_hist(1:k+1,1));
+grid on;
+
+figure(4)
+plot(a_hist(1:k+1,1));
 grid on;
 
 

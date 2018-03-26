@@ -12,7 +12,7 @@ function [alpha_final,num_iter] = golden(x,d,c1,c2,alpha_max)
 pout = 0; % debug print output
 
 % Simulation parameters
-N           = 200;        % just in case... limit the max number of iterations
+N           = 50;        % just in case... limit the max number of iterations
 alpha_min   = 0.0;        % Given in problem
 c           = zeros(2,1); % Endpoints of the Golden Section search
 e           = zeros(N,1); % Candidate points (alpha) of G.S search
